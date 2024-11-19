@@ -107,7 +107,7 @@ const props = defineProps({
     background-size: contain;
 }
 
-.lottery-content:after {
+/* .lottery-content:after {
     content: "";
     display: block;
     position: absolute;
@@ -115,8 +115,8 @@ const props = defineProps({
     left: -17px;
     right: auto;
     border: 10px solid transparent;
-    border-right-color: #fff;
-}
+    border-right-color: #fff; 
+}*/
 
 .lottery-content .content-title {
     margin: 0 0 10px;
@@ -138,9 +138,10 @@ const props = defineProps({
 }
 
 .lottery-content .content-detail {
-    line-height: 75px;
+    display: flex;
     height: 100%;
-    text-align: center;
+    justify-content: center;
+    align-items: center;
 }
 
 .lottery-content .content-detail b {
@@ -148,17 +149,14 @@ const props = defineProps({
     color: #FD361F;
     font-weight: bold;
     font-family: 'STKaiti', 'KaiTi ';
-    left: 25px;
+    left: 50px;
+    font-size: 2rem;
 }
 
 .lottery-content .content-detail span {
-    margin: 15px 0 10px;
-    line-height: 73px;
-    font-size: 40px;
-    font-weight: 400;
-    font-family: fantasy;
+    font-size: 4rem;
+    font-weight: bold;
     color: #ff0000;
-    padding-right: 2px;
     /*font-family: '微软雅黑', sans-serif, arial;*/
 }
 </style>

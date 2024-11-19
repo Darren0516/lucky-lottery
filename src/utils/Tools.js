@@ -34,6 +34,49 @@ const Tools = {
         }
 
         return selected;
+    },
+    /**音樂淡入 */
+    MusicFadeIn(audio, duration) {
+        // 設定初始音量為 0
+        audio.volume = 0;
+        audio.play();  // 開始播放音頻
+
+        let step = 0.05;  // 每次增長的音量步長
+        let interval = duration / (1 / step);  // 每個步驟的時間
+
+        // 使用 setInterval 改變音量
+        let fadeInterval = setInterval(function () {
+            if (audio.volume < 1) {
+                audio.volume = Math.min(1, audio.volume + step);  // 增加音量，並確保不超過 1
+            } else {
+                clearInterval(fadeInterval);  // 停止淡入
+            }
+        }, interval);
+    },
+    /**音樂淡出 */
+    MusicFadeOut(audio, duration) {
+        let step = 0.05;  // 每次減少的音量步長
+        let interval = duration / (1 / step);  // 每個步驟的時間
+
+        // 使用 setInterval 改變音量
+        let fadeInterval = setInterval(function () {
+            if (audio.volume > 0) {
+                audio.volume = Math.max(0, audio.volume - step);  // 減少音量，並確保不低於 0
+            } else {
+                audio.pause();  // 音量減到 0 後停止播放
+                clearInterval(fadeInterval);  // 停止淡出
+            }
+        }, interval);
+    },
+    /**音樂切換 */
+    SwitchMusic(currentAudio, newAudio, fadeOutDuration, fadeInDuration) {
+        this.MusicFadeOut(currentAudio, fadeOutDuration);  // 淡出當前音樂
+
+        // 等待淡出完成後，開始淡入新音樂
+        setTimeout(function () {
+            newAudio.play();  // 播放新音樂
+            MusicFadeIn(newAudio, fadeInDuration);  // 淡入新音樂
+        }, fadeOutDuration);  // 等待淡出結束的時間後執行
     }
 };
 

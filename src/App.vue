@@ -1,5 +1,5 @@
 <template>
-  <header class="top-head" @click="toggleFullScreen"></header>
+  <header class="top-head"></header>
   <SlideComponent ref="winListRef" class="aside-left" :title="win.title" :items="winList" @donate="donateClick" />
   <SlideComponent ref="giftListRef" class="aside-right" :title="gift.title" :items="gift.items" @donate="setLotteryBtn">
     <template #title="{ item }">
@@ -33,8 +33,9 @@
       </div>
     </div>
   </div>
-  <div id="clear-control" @click="clearIgnore"></div>
-  <footer class="footer" @click="bgToggle"></footer>
+  <div id="clear-control" @click="clearIgnore" title="清空捐贈清單"></div>
+  <div id="bg-music-control" :class="{ pause: bgPlaying }" @click="bgToggle" title="抽獎背景音樂"></div>
+  <footer class="footer"></footer>
 </template>
 
 <script setup>
@@ -57,28 +58,52 @@ const clearIgnore = () => {
   userConfirmed && store.ClearDonate();
 };
 
+/**按鍵處理 */
+document.addEventListener('keydown', function (event) {
+  event.preventDefault();  // 阻止 F1 鍵的默認行為（即打開幫助）
+
+  if (event.key === ' ' || event.key === 'Spacebar') {  // 檢查是否是空白鍵
+    if (lotteryBtn.value.count) {
+      getWin();
+    }
+    return;
+  }
+
+  if (event.key === 'F1') {  // 使用 event.key 判斷是否是 F2 鍵
+    bgToggle()
+    return;
+  }
+  if (event.key === 'F2') {  // 使用 event.key 判斷是否是 F2 鍵
+    toggleFullScreen()
+    return;
+  }
+});
+
+
 // 背景音樂
 const bgAudio = ref(null);
 bgAudio.value = new Audio('bg.mp3');
 bgAudio.value.loop = true;
-let bgPlaying = false;
+const bgPlaying = ref(false);
 const bgToggle = () => {
-  if (bgPlaying) {
+  if (!bgAudio.value.paused) {
     bgPause();
   } else {
     bgPlay();
   }
 }
 const bgPlay = () => {
-  if (bgAudio.value) {
-    bgAudio.value.play();
-    bgPlaying = true;
+  if (bgAudio.value && bgAudio.value.paused) {
+    awardPause();
+    awardAudio.value.currentTime = 0;
+    Tools.MusicFadeIn(bgAudio.value, 2000);
+    bgPlaying.value = true;
   }
 };
 const bgPause = () => {
-  if (bgAudio.value) {
-    bgAudio.value.pause();
-    bgPlaying = false;
+  if (bgAudio.value && !bgAudio.value.paused) {
+    Tools.MusicFadeOut(bgAudio.value, 2000);
+    bgPlaying.value = false;
   }
 };
 
@@ -102,12 +127,13 @@ const awardAudio = ref(null);
 awardAudio.value = new Audio('award.mp3');
 awardAudio.value.loop = true;
 const awardPlay = () => {
-  if (awardAudio.value) {
+  if (awardAudio.value && awardAudio.value.paused) {
+    awardAudio.value.currentTime = 0;
     awardAudio.value.play();
   }
 };
 const awardPause = () => {
-  if (awardAudio.value) {
+  if (awardAudio.value && !awardAudio.value.paused) {
     awardAudio.value.pause();
   }
 };
@@ -457,6 +483,23 @@ aside.aside-right {
   background: url("./assets/clear.png") 0 0 no-repeat;
   background-size: contain;
   cursor: pointer;
+}
+
+#bg-music-control {
+  z-index: 2;
+  position: fixed;
+  bottom: 3%;
+  left: 0.5%;
+  width: 3rem;
+  height: 3rem;
+  background: url("./assets/music.png") 0 0 no-repeat;
+  background-size: contain;
+  cursor: pointer;
+}
+
+#bg-music-control.pause {
+  background: url("./assets/bell.png") 0 0 no-repeat;
+  background-size: contain;
 }
 
 .btn-red-outline {
