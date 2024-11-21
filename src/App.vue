@@ -52,8 +52,20 @@ import AlertComponent from './components/AlertComponent.vue';
 
 const store = MainStore();
 const poolsCount = computed(() => lotteryBtn.value.key == '99' ? store.lastPoolsCount : store.pools.length);
-onMounted(() => {
-  store.InitialAward();
+onMounted(async () => {
+  try {
+    const response = await fetch('/config.json');
+    const data = await response.json();
+    const tickets = [];
+    for (let i = data.ticketsStart; i <= data.ticketsEnd; i++) {
+      tickets.push(i);
+    }
+    data.tickets = tickets;
+
+    store.InitialAward(data);
+  } catch (error) {
+    console.error('載入配置檔案失敗:', error);
+  }
 });
 
 let alertMsg = ref('');
@@ -72,7 +84,8 @@ const clearIgnore = () => {
 
 /**按鍵處理 */
 document.addEventListener('keydown', function (event) {
-  event.preventDefault();  // 阻止 F1 鍵的默認行為（即打開幫助）
+  if (event.key === 'F1' || event.key === 'F2')
+    event.preventDefault();  // 阻止 F1 鍵的默認行為（即打開幫助）
 
   if (event.key === ' ' || event.key === 'Spacebar') {  // 檢查是否是空白鍵
     if (lotteryBtn.value.count) {

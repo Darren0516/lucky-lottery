@@ -2,9 +2,9 @@ import { defineStore } from 'pinia';
 
 export const MainStore = defineStore('MainStore', {
     state: () => ({
-        partkey: 55,
+        partkey: 0,
         /**摸獎券 */
-        tickets: [...Array(107).keys()].map(i => i + 1),
+        tickets: [],
         /**已中獎 */
         awardList: {
             '1': [],
@@ -20,7 +20,10 @@ export const MainStore = defineStore('MainStore', {
     }),
     actions: {
         /**初始化中獎 */
-        InitialAward() {
+        InitialAward(data) {
+            this.tickets = data.tickets;
+            this.partkey = data.partkey;
+
             // 防護驗證
             if (!!!localStorage['award'])
                 return;
