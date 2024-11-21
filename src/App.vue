@@ -36,6 +36,7 @@
   <div id="clear-control" @click="clearIgnore" title="清空捐贈清單"></div>
   <div id="bg-music-control" :class="{ pause: bgPlaying }" @click="bgToggle" title="抽獎背景音樂"></div>
   <footer class="footer"></footer>
+  <AlertComponent v-if="alertMsg" @close="closeHandler" :msg="alertMsg" :callBack="alertCallback" />
 </template>
 
 <script setup>
@@ -47,15 +48,26 @@ import { watch } from 'vue';
 import { MainStore } from './store/MainStore';
 import { onMounted } from 'vue';
 import Tools from './utils/Tools';
+import AlertComponent from './components/AlertComponent.vue';
 
 const store = MainStore();
 const poolsCount = computed(() => lotteryBtn.value.key == '99' ? store.lastPoolsCount : store.pools.length);
 onMounted(() => {
   store.InitialAward();
 });
+
+let alertMsg = ref('');
+let alertCallback = ref(null);
+const closeHandler = () => {
+  alertMsg.value = '';
+  alertCallback.value = null;
+};
 const clearIgnore = () => {
-  const userConfirmed = confirm(`是否重置所有捐出紀錄？`);
-  userConfirmed && store.ClearDonate();
+  alertMsg.value = `是否重置所有捐出紀錄？`;
+  alertCallback.value = () => {
+    store.ClearDonate();
+    closeHandler();
+  };
 };
 
 /**按鍵處理 */
@@ -166,8 +178,11 @@ const winList = computed(() => {
 });
 // 捐出處理
 const donateClick = (item) => {
-  const userConfirmed = confirm(`${item.id} 你確定要捐出獎金嗎？`);
-  userConfirmed && store.SetDonate(item.key, item.id);
+  alertMsg.value = `<font style="font-size: 3rem; color: #2980B9; font-weight: bold;">中獎號碼: ${item.id}</font></br>確定要捐出獎金嗎？`;
+  alertCallback.value = () => {
+    store.SetDonate(item.key, item.id);
+    closeHandler();
+  };
 };
 
 const gift = computed(() => ({
