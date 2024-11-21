@@ -17,7 +17,7 @@
 <script setup>
 import { Vue3Marquee } from 'vue3-marquee';
 import PrizeNumberComponent from './PrizeNumberComponent.vue';
-import { computed, defineEmits, ref } from 'vue';
+import { computed, ref } from 'vue';
 import CountDownComponent from './CountDownComponent.vue';
 import ResultComponent from './ResultComponent.vue';
 import { MainStore } from '../store/MainStore';

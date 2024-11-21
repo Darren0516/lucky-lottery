@@ -29,7 +29,7 @@
 </template>
 
 <script setup>
-import { computed, ref, defineExpose } from 'vue';
+import { computed, ref } from 'vue';
 
 const emit = defineEmits();
 const show = ref(false);
