@@ -122,14 +122,16 @@ const bgPlay = () => {
     awardPause();
     awardAudio.value.currentTime = 0;
     Tools.MusicFadeIn(bgAudio.value, 2000);
-    bgPlaying.value = true;
   }
+
+  bgPlaying.value = true;
 };
 const bgPause = () => {
   if (bgAudio.value && !bgAudio.value.paused) {
     Tools.MusicFadeOut(bgAudio.value, 2000);
-    bgPlaying.value = false;
   }
+
+  bgPlaying.value = false;
 };
 
 // 摸彩中背景音樂
