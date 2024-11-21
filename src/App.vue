@@ -287,7 +287,7 @@ const getWin = () => {
   giftListRef.value && giftListRef.value.hideSlide();
 
   loading.value = true;
-  const list = [].concat(lotteryBtn.key === '99' ? store.lastPoolsCount : store.pools);
+  const list = [].concat(lotteryBtn.value.key === '99' ? store.lastPools : store.pools);
   awards.value = Tools.GetTicket(list, lotteryBtn.value.count).sort((a, b) => a - b);
   // 設定中獎
   store.SetAward(lotteryBtn.value.key, awards.value);
