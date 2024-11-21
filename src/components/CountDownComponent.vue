@@ -9,7 +9,7 @@
 
 <script setup>
 
-import { watch, defineEmits, computed, ref } from 'vue';
+import { watch, computed, ref } from 'vue';
 const props = defineProps({
     loading: {
         type: Boolean,

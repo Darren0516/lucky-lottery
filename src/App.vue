@@ -13,7 +13,7 @@
       <h3>★彡 小幸運尾牙抽獎 彡★</h3>
     </div>
     <div class="lottery-main">
-      <h4 v-if="lotteryBtn.key">抽獎池人數: {{ poolsCount }}</h4>
+      <h4 v-if="lotteryBtn.key && loading == false">抽獎池人數: {{ poolsCount }}</h4>
       <div class="wrap-border-main" :style="mainStlye">
         <img src="./assets/wrap-border-1.png" class="wrap-border wrap-border-1">
         <img src="./assets/wrap-border-2.png" class="wrap-border wrap-border-2">

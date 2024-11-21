@@ -36,7 +36,7 @@ const store = MainStore();
 const items = computed(() => store.pools);
 const emit = defineEmits();
 const result = ref(false);
-const duration = computed(() => props.loading ? 10 : 100);
+const duration = computed(() => props.loading ? 10 : 150);
 const countDownComplete = () => {
     result.value = true;
     emit('result');
