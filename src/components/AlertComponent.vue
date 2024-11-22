@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-const emit = defineEmits();
+const emit = defineEmits(['close']);
 const props = defineProps({
     msg: {
         type: String,

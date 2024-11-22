@@ -16,7 +16,7 @@ const props = defineProps({
         default: false
     }
 });
-const emit = defineEmits();
+const emit = defineEmits(['complete']);
 
 const textMapping = {
     1: '壹',

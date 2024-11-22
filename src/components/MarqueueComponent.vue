@@ -1,7 +1,7 @@
 <template>
     <div class="wrap-main">
         <div class="lottery-wrap">
-            <Vue3Marquee vertical="true" :duration="duration" :pause="result">
+            <Vue3Marquee :vertical="true" :duration="duration" :pause="result">
                 <PrizeNumberComponent v-for="item in items" :key="item" :number="item" />
             </Vue3Marquee>
         </div>

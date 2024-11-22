@@ -9,7 +9,7 @@
             <div class="border bor-bottom"></div>
             <div class="content-detail">
                 <slot><b>抽獎號碼：</b></slot>
-                <span v-text="number"></span>
+                <span v-text="'0' + number"></span>
             </div>
         </div>
     </div>

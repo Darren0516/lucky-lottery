@@ -1,7 +1,8 @@
 <template>
   <header class="top-head"></header>
-  <SlideComponent ref="winListRef" class="aside-left" :title="win.title" :items="winList" @donate="donateClick" />
-  <SlideComponent ref="giftListRef" class="aside-right" :title="gift.title" :items="gift.items" @donate="setLotteryBtn">
+  <SlideComponent ref="winListRef" class="aside-left" :title="win.title.value" :items="winList" @donate="donateClick" />
+  <SlideComponent ref="giftListRef" class="aside-right" :title="gift.title.value" :items="gift.items"
+    @donate="setLotteryBtn">
     <template #title="{ item }">
       <h3 class="award-title">
         {{ item.title }} ({{ item.last }}位)
@@ -56,12 +57,6 @@ onMounted(async () => {
   try {
     const response = await fetch('/config.json');
     const data = await response.json();
-    const tickets = [];
-    for (let i = data.ticketsStart; i <= data.ticketsEnd; i++) {
-      tickets.push(i);
-    }
-    data.tickets = tickets;
-
     store.InitialAward(data);
   } catch (error) {
     console.error('載入配置檔案失敗:', error);
@@ -171,29 +166,29 @@ const win = {
 };
 const winList = computed(() => {
   return [{
-    title: '加碼獎(1名)', key: '99', contents: (store.awardList['99'] || []).map(id => ({ id: id, key: '99', text: `中獎號碼: ${id}` }))
+    title: '加碼獎(1名)', key: '99', contents: (store.awardList['99'] || []).map(id => ({ id: id, key: '99', text: `中獎號碼: 0${id}` }))
   }, {
-    title: '頭獎(1名)', key: '1', contents: (store.awardList['1'] || []).map(id => ({ id: id, key: '1', text: `中獎號碼: ${id}` }))
+    title: '頭獎(1名)', key: '1', contents: (store.awardList['1'] || []).map(id => ({ id: id, key: '1', text: `中獎號碼: 0${id}` }))
   },
   {
-    title: '二獎(2名)', key: '2', contents: (store.awardList['2'] || []).map(id => ({ id: id, key: '2', text: `中獎號碼: ${id}` }))
+    title: '二獎(2名)', key: '2', contents: (store.awardList['2'] || []).map(id => ({ id: id, key: '2', text: `中獎號碼: 0${id}` }))
   },
   {
-    title: '三獎(3名)', key: '3', contents: (store.awardList['3'] || []).map(id => ({ id: id, key: '3', text: `中獎號碼: ${id}` }))
+    title: '三獎(3名)', key: '3', contents: (store.awardList['3'] || []).map(id => ({ id: id, key: '3', text: `中獎號碼: 0${id}` }))
   },
   {
-    title: '四獎(15名)', key: '4', contents: (store.awardList['4'] || []).map(id => ({ id: id, key: '4', text: `中獎號碼: ${id}` }))
+    title: '四獎(15名)', key: '4', contents: (store.awardList['4'] || []).map(id => ({ id: id, key: '4', text: `中獎號碼: 0${id}` }))
   },
   {
-    title: '五獎(25名)', key: '5', contents: (store.awardList['5'] || []).map(id => ({ id: id, key: '5', text: `中獎號碼: ${id}` }))
+    title: '五獎(25名)', key: '5', contents: (store.awardList['5'] || []).map(id => ({ id: id, key: '5', text: `中獎號碼: 0${id}` }))
   },
   {
-    title: '六獎(32名)', key: '6', contents: (store.awardList['6'] || []).map(id => ({ id: id, key: '6', text: `中獎號碼: ${id}` }))
+    title: '六獎(32名)', key: '6', contents: (store.awardList['6'] || []).map(id => ({ id: id, key: '6', text: `中獎號碼: 0${id}` }))
   }]
 });
 // 捐出處理
 const donateClick = (item) => {
-  alertMsg.value = `<font style="font-size: 3rem; color: #2980B9; font-weight: bold;">中獎號碼: ${item.id}</font></br>確定要捐出獎金嗎？`;
+  alertMsg.value = `<font style="font-size: 3rem; color: #2980B9; font-weight: bold;">中獎號碼: 0${item.id}</font></br>確定要捐出獎金嗎？`;
   alertCallback.value = () => {
     store.SetDonate(item.key, item.id);
     closeHandler();
@@ -224,7 +219,7 @@ const gift = computed(() => ({
       title: '六獎', last: 32 - (store.awardList['6'] || []).length, total: 32, key: '6', count: 10, contents: [{ text: '獎金: 12000', img: 'red-envelope.png' }]
     },
     {
-      title: '參加獎', last: 29, total: 29, contents: [{ text: '獎金: 6000', img: 'red-envelope.png' }]
+      title: '參加獎', last: 28, total: 28, contents: [{ text: '獎金: 6000', img: 'red-envelope.png' }]
     }])
 }));
 
