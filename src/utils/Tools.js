@@ -6,19 +6,12 @@ const Tools = {
      * @returns {Array} - 返回抽取的結果
      */
     GetTicket(pools, count) {
-        // 使用當前時間的 ticks 作為隨機種子
-        const seed = Date.now();
-
-        // 使用 Math.random() 根據種子來生成隨機數
-        const random = (seed) => {
-            // 設置隨機種子為當前時間 (可以將種子改為更具體的時間數值進行混合)
-            const pseudoRandom = Math.sin(seed) * 10000;
-            return pseudoRandom - Math.floor(pseudoRandom);  // 轉換為 0-1 之間的浮點數
-        };
-
-        // 用於隨機選擇元素的輔助函數
-        const getRandomIndex = (arr, seed) => {
-            return Math.floor(random(seed) * arr.length);
+        // 使用 Web Crypto API 確保隨機性
+        const getRandomInt = (min, max) => {
+            // 返回一個介於 min 和 max 之間的隨機整數
+            const array = new Uint32Array(1);
+            window.crypto.getRandomValues(array); // 使用加密級隨機數生成器
+            return Math.floor(array[0] / (0xFFFFFFFF + 1) * (max - min + 1)) + min;
         };
 
         // 複製 pools 陣列來防止修改原始資料
@@ -29,7 +22,7 @@ const Tools = {
         for (let i = 0; i < count; i++) {
             if (poolCopy.length === 0) break; // 如果剩餘元素不夠，就提前結束
 
-            const randomIndex = getRandomIndex(poolCopy, seed + i);  // 基於種子選擇元素
+            const randomIndex = getRandomInt(0, poolCopy.length - 1);  // 基於加密隨機數選擇索引
             selected.push(poolCopy.splice(randomIndex, 1)[0]);  // 選擇並刪除已選元素
         }
 
