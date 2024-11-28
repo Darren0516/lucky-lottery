@@ -70,7 +70,7 @@ const closeHandler = () => {
   alertCallback.value = null;
 };
 const clearIgnore = () => {
-  alertMsg.value = `是否重置所有捐出紀錄？`;
+  alertMsg.value = `是否重置所有紀錄？`;
   alertCallback.value = () => {
     store.ClearDonate();
     closeHandler();
@@ -188,7 +188,7 @@ const winList = computed(() => {
 });
 // 捐出處理
 const donateClick = (item) => {
-  alertMsg.value = `<font style="font-size: 3rem; color: #2980B9; font-weight: bold;">中獎號碼: 0${item.id}</font></br>確定要捐出獎金嗎？`;
+  alertMsg.value = `<font style="font-size: 3rem; color: #2980B9; font-weight: bold;">中獎號碼: 0${item.id}</font></br>確定要移除中獎嗎？`;
   alertCallback.value = () => {
     store.SetDonate(item.key, item.id);
     closeHandler();
