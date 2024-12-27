@@ -5,7 +5,8 @@
     @donate="setLotteryBtn">
     <template #title="{ item }">
       <h3 class="award-title">
-        {{ item.title }} ({{ item.last }}位)
+        {{ item.title }} <span class="crease" title="減少" @click="awardsCrease(item.key, -1)">(</span>{{ item.last
+        }}位<span class="crease" title="增加" @click="awardsCrease(item.key, 1)">)</span>
       </h3>
     </template>
   </SlideComponent>
@@ -52,7 +53,7 @@ import Tools from './utils/Tools';
 import AlertComponent from './components/AlertComponent.vue';
 
 const store = MainStore();
-const poolsCount = computed(() => lotteryBtn.value.key == '99' ? store.lastPoolsCount : store.pools.length);
+const poolsCount = computed(() => store.pools.length);
 onMounted(async () => {
   try {
     const response = await fetch('/config.json');
@@ -166,24 +167,24 @@ const win = {
 };
 const winList = computed(() => {
   return [{
-    title: '加碼獎(1名)', key: '99', contents: (store.awardList['99'] || []).map(id => ({ id: id, key: '99', text: `中獎號碼: 0${id}` }))
+    title: `加碼獎(${(store.awardList['99'] || []).length}/${store.awards[99]}名)`, key: '99', contents: (store.awardList['99'] || []).map(id => ({ id: id, key: '99', text: `中獎號碼: 0${id}` }))
   }, {
-    title: '頭獎(1名)', key: '1', contents: (store.awardList['1'] || []).map(id => ({ id: id, key: '1', text: `中獎號碼: 0${id}` }))
+    title: `頭獎(${(store.awardList['1'] || []).length}/${store.awards[1]}名)`, key: '1', contents: (store.awardList['1'] || []).map(id => ({ id: id, key: '1', text: `中獎號碼: 0${id}` }))
   },
   {
-    title: '二獎(2名)', key: '2', contents: (store.awardList['2'] || []).map(id => ({ id: id, key: '2', text: `中獎號碼: 0${id}` }))
+    title: `二獎(${(store.awardList['2'] || []).length}/${store.awards[2]}名)`, key: '2', contents: (store.awardList['2'] || []).map(id => ({ id: id, key: '2', text: `中獎號碼: 0${id}` }))
   },
   {
-    title: '三獎(3名)', key: '3', contents: (store.awardList['3'] || []).map(id => ({ id: id, key: '3', text: `中獎號碼: 0${id}` }))
+    title: `三獎(${(store.awardList['3'] || []).length}/${store.awards[3]}名)`, key: '3', contents: (store.awardList['3'] || []).map(id => ({ id: id, key: '3', text: `中獎號碼: 0${id}` }))
   },
   {
-    title: '四獎(15名)', key: '4', contents: (store.awardList['4'] || []).map(id => ({ id: id, key: '4', text: `中獎號碼: 0${id}` }))
+    title: `四獎(${(store.awardList['4'] || []).length}/${store.awards[4]}名)`, key: '4', contents: (store.awardList['4'] || []).map(id => ({ id: id, key: '4', text: `中獎號碼: 0${id}` }))
   },
   {
-    title: '五獎(25名)', key: '5', contents: (store.awardList['5'] || []).map(id => ({ id: id, key: '5', text: `中獎號碼: 0${id}` }))
+    title: `五獎(${(store.awardList['5'] || []).length}/${store.awards[5]}名)`, key: '5', contents: (store.awardList['5'] || []).map(id => ({ id: id, key: '5', text: `中獎號碼: 0${id}` }))
   },
   {
-    title: '六獎(32名)', key: '6', contents: (store.awardList['6'] || []).map(id => ({ id: id, key: '6', text: `中獎號碼: 0${id}` }))
+    title: `六獎(${(store.awardList['6'] || []).length}/${store.awards[6]}名)`, key: '6', contents: (store.awardList['6'] || []).map(id => ({ id: id, key: '6', text: `中獎號碼: 0${id}` }))
   }]
 });
 // 捐出處理
@@ -199,29 +200,40 @@ const gift = computed(() => ({
   title: ref('尾牙獎項'),
   items: ((store.awardList['1'] || []).length == 1 && loading.value == false ? [
     {
-      title: '加碼獎', last: 1 - (store.awardList['99'] || []).length, total: 1, key: '99', count: 1, contents: [{ text: '獎金: ??????', img: 'red-envelope.png' }]
+      title: '加碼獎', last: store.awards[99] - (store.awardList['99'] || []).length, total: store.awards[99], key: '99', count: 1, contents: [{ text: '獎金: ??????', img: 'red-envelope.png' }]
     }] : []).concat([{
-      title: '頭獎', last: 1 - (store.awardList['1'] || []).length, total: 1, key: '1', count: 1, contents: [{ text: '獎金: 100000', img: 'red-envelope.png' }]
+      title: '頭獎', last: store.awards[1] - (store.awardList['1'] || []).length, total: store.awards[1], key: '1', count: 1, contents: [{ text: '獎金: 100000', img: 'red-envelope.png' }]
     },
     {
-      title: '二獎', last: 2 - (store.awardList['2'] || []).length, total: 2, key: '2', count: 1, contents: [{ text: '獎金: 80000', img: 'red-envelope.png' }]
+      title: '二獎', last: store.awards[2] - (store.awardList['2'] || []).length, total: store.awards[2], key: '2', count: 1, contents: [{ text: '獎金: 80000', img: 'red-envelope.png' }]
     },
     {
-      title: '三獎', last: 3 - (store.awardList['3'] || []).length, total: 3, key: '3', count: 1, contents: [{ text: '獎金: 60000', img: 'red-envelope.png' }]
+      title: '三獎', last: store.awards[3] - (store.awardList['3'] || []).length, total: store.awards[3], key: '3', count: 1, contents: [{ text: '獎金: 60000', img: 'red-envelope.png' }]
     },
     {
-      title: '四獎', last: 15 - (store.awardList['4'] || []).length, total: 15, key: '4', count: 5, contents: [{ text: '獎金: 30000', img: 'red-envelope.png' }]
+      title: '四獎', last: store.awards[4] - (store.awardList['4'] || []).length, total: store.awards[4], key: '4', count: 5, contents: [{ text: '獎金: 30000', img: 'red-envelope.png' }]
     },
     {
-      title: '五獎', last: 25 - (store.awardList['5'] || []).length, total: 25, key: '5', count: 5, contents: [{ text: '獎金: 20000', img: 'red-envelope.png' }]
+      title: '五獎', last: store.awards[5] - (store.awardList['5'] || []).length, total: store.awards[5], key: '5', count: 5, contents: [{ text: '獎金: 20000', img: 'red-envelope.png' }]
     },
     {
-      title: '六獎', last: 32 - (store.awardList['6'] || []).length, total: 32, key: '6', count: 10, contents: [{ text: '獎金: 12000', img: 'red-envelope.png' }]
+      title: '六獎', last: store.awards[6] - (store.awardList['6'] || []).length, total: store.awards[6], key: '6', count: 10, contents: [{ text: '獎金: 12000', img: 'red-envelope.png' }]
     },
     {
-      title: '參加獎', last: 28, total: 28, contents: [{ text: '獎金: 6000', img: 'red-envelope.png' }]
+      title: '參加獎', last: store.leaveCount, total: store.leaveCount, contents: [{ text: '獎金: 6000', img: 'red-envelope.png' }]
     }])
 }));
+
+// 獎項數量添加處理
+const awardsCrease = (key, count) => {
+  if (!key)
+    return;
+
+  const last = store.awards[key] - (store.awardList[key] || []).length;
+  if (last + count >= 0) {
+    store.awards[key] += count;
+  }
+}
 
 const lotteryBtn = ref({
   key: '',
@@ -282,7 +294,7 @@ const getWin = () => {
   giftListRef.value && giftListRef.value.hideSlide();
 
   loading.value = true;
-  const list = [].concat(lotteryBtn.value.key === '99' ? store.lastPools : store.pools);
+  const list = [].concat(lotteryBtn.value.key === '99' && store.awardList['99'].length === 0 ? store.lastPools : store.pools);
   awards.value = Tools.GetTicket(list, lotteryBtn.value.count).sort((a, b) => a - b);
   // 設定中獎
   store.SetAward(lotteryBtn.value.key, awards.value);
@@ -479,6 +491,10 @@ aside.aside-right {
   text-align: center;
   font-family: 'STKaiti', 'KaiTi ';
   border-bottom: 2px solid #FD361F;
+}
+
+.crease {
+  cursor: pointer;
 }
 
 .dashboard {

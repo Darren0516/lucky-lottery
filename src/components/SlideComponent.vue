@@ -193,7 +193,7 @@ aside .switch {
 }
 
 .award-con {
-  margin-top: 0.5rem;
+  margin-top: 4rem;
   margin-left: 2rem;
 }
 

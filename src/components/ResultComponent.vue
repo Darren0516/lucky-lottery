@@ -5,7 +5,7 @@
             <div class="modal-content">
                 <canvas ref="canvasRef"></canvas>
             </div>
-            <div class="award-list">
+            <div class="award-list" @click.stop>
                 <div class="wrap-border-main">
                     <img src="../assets/wrap-border-1.png" class="wrap-border wrap-border-1">
                     <img src="../assets/wrap-border-2.png" class="wrap-border wrap-border-2">
